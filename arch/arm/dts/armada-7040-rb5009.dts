@@ -132,8 +132,7 @@
 	};
 
 	phy1 {
-		phy-type = <COMPHY_TYPE_USB3_HOST0>;
-		phy-speed = <COMPHY_SPEED_5G>;
+		phy-type = <COMPHY_TYPE_UNCONNECTED>;
 	};
 
 	phy2 {
@@ -142,7 +141,8 @@
 	};
 
 	phy3 {
-		phy-type = <COMPHY_TYPE_UNCONNECTED>;
+		phy-type = <COMPHY_TYPE_USB3_HOST1>;
+		phy-speed = <COMPHY_SPEED_5G>;
 	};
 
 	phy4 {
