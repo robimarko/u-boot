@@ -6,6 +6,8 @@
 #ifndef _CONFIG_MVEBU_ARMADA_8K_H
 #define _CONFIG_MVEBU_ARMADA_8K_H
 
+#include <linux/sizes.h>
+
 /*
  * High Level Configuration Options (easy to change)
  */
@@ -28,6 +30,8 @@
 
 /* End of 16M scrubbed by training in bootrom */
 #define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_TEXT_BASE + 0xFF0000)
+
+#define CONFIG_SYS_BOOTM_LEN		SZ_64M
 
 /* When runtime detection fails this is the default */
 
