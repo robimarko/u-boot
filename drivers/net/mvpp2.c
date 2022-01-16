@@ -3304,6 +3304,76 @@ static int gop_gpcs_reset(struct mvpp2_port *port, int reset)
 	return 0;
 }
 
+static void gop_pcs_reset_assert(struct mvpp2_port *port)
+{
+	u32 val;
+
+	if (port->priv->hw_version == MVPP21 || port->gop_id != 0)
+		return;
+
+	val = readl(port->priv->mpcs_base + port->gop_id * MVPP22_PORT_OFFSET +
+		PCS_CLOCK_RESET);
+	val &= ~(MAC_CLK_RESET_MASK | RX_SD_CLK_RESET_MASK | TX_SD_CLK_RESET_MASK);
+	val |= CLK_DIV_PHASE_SET_MASK;
+	writel(val, port->priv->mpcs_base + port->gop_id * MVPP22_PORT_OFFSET +
+		PCS_CLOCK_RESET);
+
+	val = readl(port->priv->xpcs_base + port->gop_id * MVPP22_PORT_OFFSET +
+		MVPP22_XPCS_GLOBAL_CFG_0_REG);
+	val &= ~MVPP22_XPCS_PCSRESET;
+	writel(val,	port->priv->xpcs_base + port->gop_id * MVPP22_PORT_OFFSET +
+		MVPP22_XPCS_GLOBAL_CFG_0_REG);
+}
+
+static void gps_pcs_reset_deassert(struct mvpp2_port *port)
+{
+	u32 val;
+
+	if (port->priv->hw_version == MVPP21 || port->gop_id != 0)
+		return;
+
+	/* this code is only for case of PHY_INTERFACE_MODE_10GBASER! */
+	val = readl(port->priv->mpcs_base + port->gop_id * MVPP22_PORT_OFFSET +
+		PCS_CLOCK_RESET);
+	val |= MAC_CLK_RESET_MASK | RX_SD_CLK_RESET_MASK |
+	       TX_SD_CLK_RESET_MASK;
+	val &= ~CLK_DIV_PHASE_SET_MASK;
+	writel(val, port->priv->mpcs_base + port->gop_id * MVPP22_PORT_OFFSET +
+		PCS_CLOCK_RESET);
+}
+
+/* Set the internal mux's to the required PCS in the PI */
+static int gop_xpcs_mode(struct mvpp2_port *port, int num_of_lanes)
+{
+	u32 val;
+	int lane;
+
+	switch (num_of_lanes) {
+	case 1:
+		lane = 0;
+		break;
+	case 2:
+		lane = 1;
+		break;
+	case 4:
+		lane = 2;
+		break;
+	default:
+		return -1;
+	}
+
+	/* configure XG MAC mode */
+	val = readl(port->priv->xpcs_base + port->gop_id * MVPP22_PORT_OFFSET +
+		MVPP22_XPCS_GLOBAL_CFG_0_REG);
+	val &= ~MVPP22_XPCS_PCSMODE_MASK;
+	val &= ~MVPP22_XPCS_LANEACTIVE_MASK;
+	val |= (2 * lane) << MVPP22_XPCS_LANEACTIVE_OFFS;
+	writel(val, port->priv->xpcs_base + port->gop_id * MVPP22_PORT_OFFSET +
+		MVPP22_XPCS_GLOBAL_CFG_0_REG);
+
+	return 0;
+}
+
 static int gop_mpcs_mode(struct mvpp2_port *port)
 {
 	u32 val;
@@ -3445,7 +3515,10 @@ static int gop_port_init(struct mvpp2_port *port)
 		num_of_act_lanes = 2;
 		mac_num = 0;
 		/* configure PCS */
+		gop_pcs_reset_assert(port);
+		gop_xpcs_mode(port, num_of_act_lanes);
 		gop_mpcs_mode(port);
+		gps_pcs_reset_deassert(port);
 		/* configure MAC */
 		gop_xlg_mac_mode_cfg(port, num_of_act_lanes);
 
