@@ -59,7 +59,7 @@ static int dm_mdio_post_bind(struct udevice *dev)
 		return -EINVAL;
 	}
 
-	return 0;
+	return dm_scan_fdt_dev(dev);
 }
 
 /*
