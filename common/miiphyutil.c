@@ -47,6 +47,9 @@ struct mii_dev *miiphy_get_dev_by_name(const char *devname)
 		return NULL;
 	}
 
+	if (list_empty(&mii_devs))
+		miiphy_init();
+
 	list_for_each(entry, &mii_devs) {
 		dev = list_entry(entry, struct mii_dev, link);
 		if (strcmp(dev->name, devname) == 0)
