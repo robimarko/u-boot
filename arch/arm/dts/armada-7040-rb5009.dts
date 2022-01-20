@@ -218,43 +218,56 @@
 			port@1 {
 				reg = <1>;
 				label = "p8";
-				//phy-handle = <&switch0phy1>;
+				phy-handle = <&switch0phy1>;
 			};
 
 			port@2 {
 				reg = <2>;
 				label = "p7";
-				//phy-handle = <&switch0phy2>;
+				phy-handle = <&switch0phy2>;
 			};
 
 			port@3 {
 				reg = <3>;
 				label = "p6";
-				//phy-handle = <&switch0phy3>;
+				phy-handle = <&switch0phy3>;
 			};
 
 			port@4 {
 				reg = <4>;
 				label = "p5";
-				//phy-handle = <&switch0phy4>;
+				phy-handle = <&switch0phy4>;
 			};
 
 			port@5 {
 				reg = <5>;
 				label = "p4";
-				//phy-handle = <&switch0phy5>;
+				phy-handle = <&switch0phy5>;
 			};
 
 			port@6 {
 				reg = <6>;
 				label = "p3";
-				//phy-handle = <&switch0phy6>;
+				phy-handle = <&switch0phy6>;
 			};
 
 			port@7 {
 				reg = <7>;
 				label = "p2";
-				//phy-handle = <&switch0phy7>;
+				phy-handle = <&switch0phy7>;
+			};
+
+			port@8 {
+				reg = <8>;
+				label = "dummy";
+				status = "disabled";
+			};
+
+			port@9 {
+				reg = <9>;
+				label = "p1";
+				phy-handle = <&qca8081>;
+				phy-mode = "sgmii";
 			};
 		};
 
