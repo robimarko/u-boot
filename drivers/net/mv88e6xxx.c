@@ -7,6 +7,7 @@
 #include <linux/bitops.h>
 #include <linux/iopoll.h>
 #include <miiphy.h>
+#include <net/dsa.h>
 #include <phy.h>
 
 #include "mv88e6xxx.h"
@@ -37,6 +38,8 @@ int mv88e6xxx_g2_write(struct mv88e6xxx_priv *priv, int reg, u16 val)
 {
 	return mv88e6xxx_write(priv, priv->global2_addr, MDIO_DEVAD_NONE, reg, val);
 }
+
+static const struct dsa_ops mv88e6xxx_dsa_ops = {};
 
 static int mv88e6xxx_probe(struct udevice *dev)
 {
@@ -78,6 +81,6 @@ U_BOOT_DRIVER(mv88e6xxx) = {
 	.id			= UCLASS_DSA,
 	.of_match		= mv88e6xxx_ids,
 	.probe			= mv88e6xxx_probe,
-	//.ops			= &mvmdio_ops,
+	.ops			= &mv88e6xxx_dsa_ops,
 	.priv_auto		= sizeof(struct mv88e6xxx_priv),
 };
