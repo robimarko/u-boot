@@ -190,6 +190,12 @@ config CALXEDA_XGMAC
 	  This driver supports the XGMAC in Calxeda Highbank and Midway
 	  machines.
 
+config DSA_MV88E6XXX
+	bool "Marvell Link Street (MV88E6xxx) switch driver"
+	depends on DM_DSA && DM_MDIO
+	help
+	  This driver provides basic support for Marvell Amethyst family switches.
+
 config DWC_ETH_QOS
 	bool "Synopsys DWC Ethernet QOS device support"
 	depends on DM_ETH
